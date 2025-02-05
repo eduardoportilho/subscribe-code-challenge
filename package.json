@@ -1,0 +1,14 @@
+{
+  "name": "subscribe-code-challenge",
+  "version": "1.0.0",
+  "description": "Subscribe code challenge",
+  "main": "index.js",
+  "author": "Eduardo Portilho <eduardo.portilho@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
