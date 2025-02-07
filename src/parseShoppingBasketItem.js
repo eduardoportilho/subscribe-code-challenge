@@ -12,11 +12,23 @@
  * @returns {ShoppingBasketEntry}
  */
 const parseShoppingBasketItem = (shoppingBasketItem) => {
+  if (!shoppingBasketItem.includes(" at ")) {
+    throw new Error("Invalid entry");
+  }
+
   const [description, unitPriceString] = shoppingBasketItem.split(" at ");
   const qtdMatch = shoppingBasketItem.match(/^(?<qtd>\d+) /);
 
+  if (!qtdMatch.groups) {
+    throw new Error("Invalid entry");
+  }
+
   const qtd = parseInt(qtdMatch.groups.qtd);
   const unitPrice = parseFloat(unitPriceString);
+
+  if (isNaN(qtd) || isNaN(unitPrice)) {
+    throw new Error("Invalid entry");
+  }
 
   return {
     qtd,

@@ -1,10 +1,10 @@
+const { calculateTax } = require("./calculateTax");
 const { isImportedGoods } = require("./isImportedGoods");
 const { isSalesTaxExempt } = require("./isSalesTaxExempt");
 const { parseShoppingBasketItem } = require("./parseShoppingBasketItem");
-const { roundTo2DecimalPlaces } = require("./round");
 
-const SALES_TAX = 10 / 100;
-const IMPORT_DUTY_TAX = 5 / 100;
+const SALES_TAX = 10;
+const IMPORT_DUTY_TAX = 5;
 
 /**
  * Receipt entry
@@ -15,11 +15,11 @@ const IMPORT_DUTY_TAX = 5 / 100;
  */
 
 /**
- * Calculate toptal price after sales taxes
+ * Generate a receipt entry for a shopping basket item
  * @param string shoppingBasketEntry - entry from input, ex. "1 imported bottle of perfume at 27.99"
  * @returns {ReceiptEntry}
  */
-const calculateTotalPriceAfterTax = (shoppingBasketEntry) => {
+const generateReceiptEntry = (shoppingBasketEntry) => {
   let tax = 0.0;
 
   if (!isSalesTaxExempt(shoppingBasketEntry)) {
@@ -32,10 +32,11 @@ const calculateTotalPriceAfterTax = (shoppingBasketEntry) => {
   const { description, unitPrice, qtd } =
     parseShoppingBasketItem(shoppingBasketEntry);
 
-  const totalPrice = qtd * unitPrice;
-  // TODO: check which rounding method should be used
-  const taxAmount = roundTo2DecimalPlaces(totalPrice * tax);
-  const totalPriceAfterTax = roundTo2DecimalPlaces(totalPrice + taxAmount);
+  const { taxAmount, totalPriceAfterTax } = calculateTax({
+    unitPrice,
+    qtd,
+    tax,
+  });
 
   return {
     description,
@@ -45,5 +46,5 @@ const calculateTotalPriceAfterTax = (shoppingBasketEntry) => {
 };
 
 module.exports = {
-  calculateTotalPriceAfterTax,
+  generateReceiptEntry,
 };

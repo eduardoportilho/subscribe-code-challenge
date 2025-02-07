@@ -4,12 +4,15 @@
 
 ## Assumptions
 
-- Numeric values in the input should not have any thousand separator (i.e. `1234.56` and not `1,234.56`).
-- Imported goods in the input should cointain the word "imported" (in lower case) in their description.
-- Products that are exempt of sales tax should have one of the listed terms in their description:
+- Input should be composed with rows in the following format: `<quantity (int)> <description (string)> at <unit_price (float)>`
+- Invalid input will generate an exception and the application execution will be interrupted
+- Numeric values in the input should not have any thousand separators (i.e. `1234.56` and not `1,234.56`).
+- Imported goods in the input should contain the word "imported" (in lower case) in their description.
+- Products that are exempt of sales tax should have one of the listed terms (case sensitive) in their description:
   - Book: "book"
   - Food: "chocolate"
   - Medical product: "headache pill"
+- The sales tax amount is rounded to the nearest 0.05, ex: `142.2 * 15% = 21.33` will be rounded to `21.35`
 
 ## Running the application
 

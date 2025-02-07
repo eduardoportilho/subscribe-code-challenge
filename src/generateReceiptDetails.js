@@ -1,6 +1,5 @@
-const {
-  calculateTotalPriceAfterTax,
-} = require("./calculateTotalPriceAfterTax");
+const { roundTo2DecimalPlaces } = require("./round");
+const { generateReceiptEntry } = require("./generateReceiptEntry");
 
 const formatAmount = (number) => number.toFixed(2);
 
@@ -10,27 +9,29 @@ const formatAmount = (number) => number.toFixed(2);
  * @returns string
  */
 const generateReceiptDetails = (shoppingBasket) => {
-  const shoppingBasketItems = shoppingBasket
-    .split("\n")
-    .map(calculateTotalPriceAfterTax);
+  const receiptEntries = shoppingBasket.split("\n").map(generateReceiptEntry);
 
-  const receiptItems = shoppingBasketItems.map(
+  const receiptItemRows = receiptEntries.map(
     ({ description, totalPriceAfterTax }) =>
       `${description}: ${formatAmount(totalPriceAfterTax)}`
   );
 
-  const { totalPrice, totalTaxAmount } = shoppingBasketItems.reduce(
+  const { totalPrice, totalTaxAmount } = receiptEntries.reduce(
     (acc, item) => {
       return {
-        totalPrice: acc.totalPrice + item.totalPriceAfterTax,
-        totalTaxAmount: acc.totalTaxAmount + item.taxAmount,
+        totalPrice: roundTo2DecimalPlaces(
+          acc.totalPrice + item.totalPriceAfterTax
+        ),
+        totalTaxAmount: roundTo2DecimalPlaces(
+          acc.totalTaxAmount + item.taxAmount
+        ),
       };
     },
     { totalPrice: 0.0, totalTaxAmount: 0.0 }
   );
 
   return [
-    ...receiptItems,
+    ...receiptItemRows,
     `Sales Taxes: ${formatAmount(totalTaxAmount)}`,
     `Total: ${formatAmount(totalPrice)}`,
   ].join("\n");
